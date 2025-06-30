@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "outDir": "./dist",
+    "outDir": "./dist/server",
     "rootDir": "./",
     "strict": true,
     "noUnusedLocals": true,
@@ -19,6 +19,6 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true
   },
-  "include": ["./**/*"],
+  "include": ["./**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }
