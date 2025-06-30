@@ -54,10 +54,21 @@ export const TicketDetailPage: React.FC = () => {
   const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      fetchTicketDetails();
-      fetchMessages();
+    console.log('Current user role:', user?.role);
+    if (!id || isNaN(parseInt(id))) {
+      showToast('Invalid ticket ID', 'error');
+      navigate('/tickets');
+      return;
     }
+    fetchTicketDetails();
+    fetchMessages();
+
+    // Fallback polling
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [id]);
 
   useEffect(() => {
@@ -132,6 +143,7 @@ export const TicketDetailPage: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setMessages(data);
+        scrollToBottom();
       } else if (response.status === 403 || response.status === 401) {
         showToast('Access Expired. Please log in again.', 'error');
         logout();
@@ -147,9 +159,22 @@ export const TicketDetailPage: React.FC = () => {
 
     setSendingMessage(true);
 
+    // Declare optimisticMessage in the outer scope so it's accessible in catch
+    let optimisticMessage: Message | null = null;
+
     try {
       if (socket) {
-        // Send via socket for real-time delivery
+        optimisticMessage = {
+          id: -Date.now(),
+          content: newMessage.trim(),
+          createdat: new Date().toISOString(),
+          senderEmail: user?.email || '',
+          senderRole: user?.role as 'ADMIN' | 'ORG_USER',
+        };
+        setMessages(prev => [...prev, optimisticMessage!]);
+        setNewMessage('');
+        scrollToBottom();
+
         socket.emit('send-message', {
           content: newMessage.trim(),
           ticketId: parseInt(id!)
@@ -184,6 +209,9 @@ export const TicketDetailPage: React.FC = () => {
     } catch (error) {
       console.error('Failed to send message:', error);
       showToast('Failed to send message', 'error');
+      if (optimisticMessage) {
+        setMessages(prev => prev.filter(msg => msg.id !== optimisticMessage!.id));
+      }
     } finally {
       setSendingMessage(false);
     }
