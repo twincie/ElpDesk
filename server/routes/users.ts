@@ -195,7 +195,7 @@ router.put('/password', async (req, res) => {
 
     // Verify current password
     const bcrypt = await import('bcryptjs');
-    const isValidPassword = await bcrypt.compare(currentPassword, dbUser.passwordHash);
+    const isValidPassword = await bcrypt.compare(currentPassword, dbUser.passwordhash);
     if (!isValidPassword) {
       return res.status(400).json({ error: 'Current password is incorrect' });
     }
