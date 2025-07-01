@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 import { DatabaseManager } from './database/index.js';
 import { authRoutes } from './routes/auth.js';
 import { ticketRoutes } from './routes/tickets.js';
@@ -10,6 +11,7 @@ import { messageRoutes } from './routes/messages.js';
 import { setupSocketHandlers } from './socket/handlers.js';
 import { userRoutes } from './routes/users.js';
 import { analyticsRoutes } from './routes/analytics.js';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -21,6 +23,12 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+
+// Serve static files from frontend build
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Initialize database
 const db = new DatabaseManager();
@@ -53,9 +61,13 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-const PORT = process.env.PORT || 3001;
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 
-server.listen(PORT, () => {
+const PORT = Number(process.env.PORT) || 3001;
+
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Database initialized successfully`);
 });
