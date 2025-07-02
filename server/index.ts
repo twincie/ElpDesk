@@ -13,7 +13,12 @@ import { userRoutes } from './routes/users.js';
 import { analyticsRoutes } from './routes/analytics.js';
 import { fileURLToPath } from 'url';
 
-dotenv.config();
+// required only on local development
+// Uncomment the next line if you want to use dotenv for local development
+// Make sure to create a .env file in the root directory with the necessary environment variables
+// If you are using a different method to manage environment variables, you can ignore this line
+
+// dotenv.config();
 
 const app = express();
 const server = createServer(app);
