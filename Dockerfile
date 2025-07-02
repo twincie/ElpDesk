@@ -35,6 +35,9 @@ COPY --from=base /app/node_modules ./node_modules
 # Copy frontend build
 COPY --from=frontend-build /app/dist ./server/public
 
+# Copy env file for dotenv if you're using it
+COPY .env ./
+
 EXPOSE 5000
 ENV NODE_ENV=production
 
