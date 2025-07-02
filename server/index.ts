@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import path from 'path';
 import { DatabaseManager } from './database/index.js';
 import { authRoutes } from './routes/auth.js';
