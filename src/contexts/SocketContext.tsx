@@ -28,7 +28,11 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (token && user) {
-      const socketInstance = io('http://localhost:3001', {
+      const backendUrl = process.env.BACKEND_BASE_URL;
+      if (!backendUrl) {
+        throw new Error('REACT_APP_BACKEND_BASE_URL is not defined in environment variables');
+      }
+      const socketInstance = io(backendUrl, {
         auth: {
           token: token
         }
