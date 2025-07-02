@@ -97,7 +97,7 @@ export const TicketDetailPage: React.FC = () => {
   }, [socket, id, showToast]);
 
   useEffect(() => {
-    scrollToBottom();
+    // scrollToBottom();
   }, [messages]);
 
   const scrollToBottom = () => {
