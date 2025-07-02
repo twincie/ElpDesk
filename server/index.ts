@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-// import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import path from 'path';
 import { DatabaseManager } from './database/index.js';
 import { authRoutes } from './routes/auth.js';
@@ -13,12 +13,7 @@ import { userRoutes } from './routes/users.js';
 import { analyticsRoutes } from './routes/analytics.js';
 import { fileURLToPath } from 'url';
 
-// required only on local development
-// Uncomment the next line if you want to use dotenv for local development
-// Make sure to create a .env file in the root directory with the necessary environment variables
-// If you are using a different method to manage environment variables, you can ignore this line
-
-// dotenv.config();
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
