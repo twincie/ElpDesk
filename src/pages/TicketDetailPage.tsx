@@ -143,7 +143,7 @@ export const TicketDetailPage: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setMessages(data);
-        scrollToBottom();
+        // scrollToBottom();
       } else if (response.status === 403 || response.status === 401) {
         showToast('Access Expired. Please log in again.', 'error');
         logout();
@@ -173,7 +173,7 @@ export const TicketDetailPage: React.FC = () => {
         };
         setMessages(prev => [...prev, optimisticMessage!]);
         setNewMessage('');
-        scrollToBottom();
+        // scrollToBottom();
 
         socket.emit('send-message', {
           content: newMessage.trim(),
